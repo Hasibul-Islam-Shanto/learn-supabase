@@ -1,12 +1,13 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { PostFromRPC } from '../../types';
+import Avatar from '../ui/Avatar';
 import Button from '../ui/Button';
 import Modal from '../ui/Modal';
 import { ImageIcon, SmileIcon, VideoIcon } from '../ui/icons';
 import toast from 'react-hot-toast';
 import { supabase } from '../../utils/supabase';
 import { useAuth } from '../../context/auth-context';
-import UserAvatar from '../common/user-avatar';
+import { fallbackAvatar } from '../profile/helpers';
 
 interface PostComposerProps {
   open: boolean;
@@ -26,8 +27,10 @@ export default function PostComposer({
   const [imageUploading, setImageUploading] = useState<boolean>(false);
   const [posting, setPosting] = useState<boolean>(false);
   const imageInputRef = useRef<HTMLInputElement>(null);
-  const { session } = useAuth();
+  const { session, profile } = useAuth();
   const currentUser = session?.user;
+  const displayName = profile?.full_name ?? profile?.username ?? 'there';
+  const avatarSrc = profile?.avatar_url ?? fallbackAvatar(displayName);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -55,18 +58,36 @@ export default function PostComposer({
     if (content.trim().length === 0 && !image) return;
     setPosting(true);
     try {
-      const { error } = await supabase.from('posts').insert({
-        content,
-        image_url: image,
-        author_id: currentUser?.id ?? '',
-      });
-      if (error) {
-        toast.error(error.message);
+      if (isEditing) {
+        const { error } = await supabase
+          .from('posts')
+          .update({
+            content,
+            image_url: image,
+          })
+          .eq('id', editingPost?.id ?? '');
+        if (error) {
+          toast.error(error.message);
+          return;
+        }
+        toast.success('Post updated successfully');
+        onClose();
+        refetchPosts();
         return;
+      } else {
+        const { error } = await supabase.from('posts').insert({
+          content,
+          image_url: image,
+          author_id: currentUser?.id ?? '',
+        });
+        if (error) {
+          toast.error(error.message);
+          return;
+        }
+        toast.success('Post created successfully');
+        onClose();
+        refetchPosts();
       }
-      toast.success('Post created successfully');
-      onClose();
-      refetchPosts();
     } catch (error) {
       toast.error((error as Error).message);
     } finally {
@@ -78,7 +99,15 @@ export default function PostComposer({
   };
 
   const isFormValid = content.trim().length > 0 || image;
-  const isEditing = Boolean(editingPost);
+  const isEditing = editingPost !== null;
+
+  useEffect(() => {
+    if (isEditing) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setContent(editingPost?.content ?? '');
+      setImage(editingPost?.image_url ?? '');
+    }
+  }, [isEditing, editingPost]);
 
   return (
     <Modal
@@ -108,12 +137,12 @@ export default function PostComposer({
       }
     >
       <div className="flex items-center gap-3">
-        {currentUser && <UserAvatar user={currentUser} />}
+        <Avatar src={avatarSrc} alt={displayName} size={44} />
         <div>
-          <p className="font-semibold text-brand">
-            {currentUser?.user_metadata?.name}
-          </p>
-          <p className="text-xs text-muted">Public</p>
+          <p className="font-semibold text-brand">{displayName}</p>
+          {profile?.username && (
+            <p className="text-xs text-muted">@{profile.username}</p>
+          )}
         </div>
       </div>
 
@@ -121,7 +150,7 @@ export default function PostComposer({
         value={content}
         onChange={(e) => setContent(e.target.value)}
         rows={4}
-        placeholder={`What's on your mind, ${currentUser?.user_metadata?.name?.split(' ')[0]}?`}
+        placeholder={`What's on your mind, ${displayName.split(' ')[0]}?`}
         className="mt-4 w-full resize-none rounded-xl bg-canvas p-3 text-[15px] text-brand placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-brand-100"
       />
       <input
