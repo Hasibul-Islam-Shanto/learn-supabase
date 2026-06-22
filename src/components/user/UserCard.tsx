@@ -1,16 +1,16 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import type { User } from '../../types'
-import Avatar from '../ui/Avatar'
-import Button from '../ui/Button'
-import { PlusIcon } from '../ui/icons'
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import type { User } from '../../types';
+import Avatar from '../ui/Avatar';
+import Button from '../ui/Button';
+import { PlusIcon } from '../ui/icons';
 
 interface UserCardProps {
-  user: User
+  user: User;
 }
 
 export default function UserCard({ user }: UserCardProps) {
-  const [following, setFollowing] = useState(false)
+  const [following, setFollowing] = useState(false);
 
   return (
     <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
@@ -52,5 +52,5 @@ export default function UserCard({ user }: UserCardProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,5 +1,5 @@
-import { NavLink } from "react-router-dom";
-import type { ReactNode } from "react";
+import { NavLink } from 'react-router-dom';
+import type { ReactNode } from 'react';
 
 import {
   GroupsIcon,
@@ -7,8 +7,8 @@ import {
   ProfileIcon,
   SavedIcon,
   UsersIcon,
-} from "../ui/icons";
-import { useAuth } from "../../context/auth-context";
+} from '../ui/icons';
+import { useAuth } from '../../context/auth-context';
 
 interface NavItem {
   to: string;
@@ -18,18 +18,18 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { to: "/", label: "Home", icon: <HomeIcon />, end: true },
-  { to: "/users", label: "Friends", icon: <UsersIcon /> },
+  { to: '/', label: 'Home', icon: <HomeIcon />, end: true },
+  { to: '/users', label: 'Friends', icon: <UsersIcon /> },
   {
     to: `/profile`,
-    label: "Profile",
+    label: 'Profile',
     icon: <ProfileIcon />,
   },
 ];
 
 const staticItems: { label: string; icon: ReactNode }[] = [
-  { label: "Groups", icon: <GroupsIcon /> },
-  { label: "Saved", icon: <SavedIcon /> },
+  { label: 'Groups', icon: <GroupsIcon /> },
+  { label: 'Saved', icon: <SavedIcon /> },
 ];
 
 export default function Sidebar() {
@@ -43,14 +43,14 @@ export default function Sidebar() {
             <NavLink
               key={item.label}
               to={
-                item.to === "/profile" ? `/profile/${currentUser?.id}` : item.to
+                item.to === '/profile' ? `/profile/${currentUser?.id}` : item.to
               }
               end={item.end}
               className={({ isActive }) =>
                 `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors ${
                   isActive
-                    ? "bg-brand-50 text-accent"
-                    : "text-brand hover:bg-brand-50"
+                    ? 'bg-brand-50 text-accent'
+                    : 'text-brand hover:bg-brand-50'
                 }`
               }
             >

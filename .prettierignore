@@ -1,0 +1,8 @@
+dist
+dist-ssr
+node_modules
+coverage
+*.local
+package-lock.json
+.husky
+public

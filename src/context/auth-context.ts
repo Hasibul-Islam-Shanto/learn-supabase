@@ -1,5 +1,5 @@
-import { createContext, useContext } from "react";
-import type { Session } from "@supabase/supabase-js";
+import { createContext, useContext } from 'react';
+import type { Session } from '@supabase/supabase-js';
 export const AuthContext = createContext<{
   session: Session | null;
   loading: boolean;

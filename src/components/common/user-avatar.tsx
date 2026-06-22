@@ -1,12 +1,12 @@
-import type { User } from "@supabase/supabase-js";
-import Avatar from "../ui/Avatar";
+import type { User } from '@supabase/supabase-js';
+import Avatar from '../ui/Avatar';
 
 function displayName(user: User): string {
   return (
     (user.user_metadata?.name as string | undefined) ??
     (user.user_metadata?.full_name as string | undefined) ??
-    user.email?.split("@")[0] ??
-    "Account"
+    user.email?.split('@')[0] ??
+    'Account'
   );
 }
 
@@ -18,7 +18,13 @@ function avatarUrl(user: User): string {
 }
 
 const UserAvatar = ({ user }: { user: User }) => {
-  return <Avatar src={avatarUrl(user)} alt={user.email ?? displayName(user)} size={38} />;
+  return (
+    <Avatar
+      src={avatarUrl(user)}
+      alt={user.email ?? displayName(user)}
+      size={38}
+    />
+  );
 };
 
 export default UserAvatar;

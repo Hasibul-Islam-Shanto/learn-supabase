@@ -23,8 +23,7 @@
   --color-muted: #6b6375;
   --color-line: #e8e6ec;
 
-  --font-sans:
-    system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-sans: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 * {

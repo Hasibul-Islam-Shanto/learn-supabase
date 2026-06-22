@@ -1,12 +1,12 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-import AppLayout from "./components/layout/AppLayout";
-import HomePage from "./pages/HomePage";
-import UsersPage from "./pages/UsersPage";
-import ProfilePage from "./pages/ProfilePage";
-import SignInPage from "./pages/SignInPage";
-import SignUpPage from "./pages/SignUpPage";
-import { currentUser } from "./data/mock";
-import { useAuth } from "./context/auth-context";
+import { Navigate, Route, Routes } from 'react-router-dom';
+import AppLayout from './components/layout/AppLayout';
+import HomePage from './pages/HomePage';
+import UsersPage from './pages/UsersPage';
+import ProfilePage from './pages/ProfilePage';
+import SignInPage from './pages/SignInPage';
+import SignUpPage from './pages/SignUpPage';
+import { currentUser } from './data/mock';
+import { useAuth } from './context/auth-context';
 
 function App() {
   const { session, loading } = useAuth();

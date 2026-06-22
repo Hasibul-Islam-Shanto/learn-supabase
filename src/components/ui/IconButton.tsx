@@ -1,8 +1,8 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
 interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children: ReactNode
-  label: string
+  children: ReactNode;
+  label: string;
 }
 
 export default function IconButton({
@@ -21,5 +21,5 @@ export default function IconButton({
     >
       {children}
     </button>
-  )
+  );
 }

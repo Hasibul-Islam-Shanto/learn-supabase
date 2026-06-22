@@ -1,10 +1,10 @@
-import Button from '../ui/Button'
-import Modal from '../ui/Modal'
+import Button from '../ui/Button';
+import Modal from '../ui/Modal';
 
 interface DeleteConfirmProps {
-  open: boolean
-  onClose: () => void
-  onConfirm: () => void
+  open: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
 }
 
 export default function DeleteConfirm({
@@ -32,5 +32,5 @@ export default function DeleteConfirm({
         Are you sure you want to delete this post? This action cannot be undone.
       </p>
     </Modal>
-  )
+  );
 }

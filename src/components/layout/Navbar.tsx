@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
-import IconButton from "../ui/IconButton";
-import Button from "../ui/Button";
-import { BellIcon, MessageIcon, SearchIcon } from "../ui/icons";
-import { useAuth } from "../../context/auth-context";
-import UserMenu from "./UserMenu";
+import { Link } from 'react-router-dom';
+import IconButton from '../ui/IconButton';
+import Button from '../ui/Button';
+import { BellIcon, MessageIcon, SearchIcon } from '../ui/icons';
+import { useAuth } from '../../context/auth-context';
+import UserMenu from './UserMenu';
 
 export default function Navbar() {
   const { session } = useAuth();

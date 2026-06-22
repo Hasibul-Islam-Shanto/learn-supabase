@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import type { PostFromRPC } from "../../types";
-import Avatar from "../ui/Avatar";
-import PostMenu from "./PostMenu";
-import CommentSection from "./CommentSection";
-import { CommentIcon, HeartIcon, ShareIcon } from "../ui/icons";
-import { formatDate } from "../../utils/date-format";
-import { supabase } from "../../utils/supabase";
-import { useAuth } from "../../context/auth-context";
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import type { PostFromRPC } from '../../types';
+import Avatar from '../ui/Avatar';
+import PostMenu from './PostMenu';
+import CommentSection from './CommentSection';
+import { CommentIcon, HeartIcon, ShareIcon } from '../ui/icons';
+import { formatDate } from '../../utils/date-format';
+import { supabase } from '../../utils/supabase';
+import { useAuth } from '../../context/auth-context';
 
 interface PostCardProps {
   post: PostFromRPC;
@@ -18,7 +18,7 @@ interface PostCardProps {
 }
 
 function formatCount(n: number): string {
-  if (n >= 1000) return `${(n / 1000).toFixed(1).replace(/\.0$/, "")}k`;
+  if (n >= 1000) return `${(n / 1000).toFixed(1).replace(/\.0$/, '')}k`;
   return String(n);
 }
 
@@ -41,13 +41,13 @@ export default function PostCard({
 
     if (liked) {
       await supabase
-        .from("likes")
+        .from('likes')
         .delete()
-        .eq("post_id", post.id)
-        .eq("user_id", session.user.id);
+        .eq('post_id', post.id)
+        .eq('user_id', session.user.id);
     } else {
       await supabase
-        .from("likes")
+        .from('likes')
         .insert({ post_id: post.id, user_id: session.user.id });
     }
   };
@@ -58,8 +58,8 @@ export default function PostCard({
       <div className="flex items-center gap-3 px-4 pt-4">
         <Link to={`/profile/${post.author?.id}`}>
           <Avatar
-            src={post.author?.avatar_url ?? "/default-avatar.png"}
-            alt={post.author?.full_name ?? ""}
+            src={post.author?.avatar_url ?? '/default-avatar.png'}
+            alt={post.author?.full_name ?? ''}
             size={44}
           />
         </Link>
@@ -110,8 +110,8 @@ export default function PostCard({
           className="inline-flex items-center gap-1.5 hover:underline"
         >
           <CommentIcon size={16} />
-          {formatCount(commentCount)}{" "}
-          {commentCount === 1 ? "comment" : "comments"}
+          {formatCount(commentCount)}{' '}
+          {commentCount === 1 ? 'comment' : 'comments'}
         </button>
         <span className="ml-auto inline-flex items-center gap-1.5">
           <ShareIcon size={16} /> {formatCount(0)}
@@ -124,7 +124,7 @@ export default function PostCard({
           type="button"
           onClick={handleLike}
           className={`flex items-center justify-center gap-2 rounded-lg py-2 text-sm font-semibold transition-colors hover:bg-brand-50 ${
-            liked ? "text-accent" : "text-muted"
+            liked ? 'text-accent' : 'text-muted'
           }`}
         >
           <HeartIcon size={18} filled={liked} /> Like
@@ -133,7 +133,7 @@ export default function PostCard({
           type="button"
           onClick={() => setCommentsOpen((v) => !v)}
           className={`flex items-center justify-center gap-2 rounded-lg py-2 text-sm font-semibold transition-colors hover:bg-brand-50 ${
-            commentsOpen ? "text-brand" : "text-muted"
+            commentsOpen ? 'text-brand' : 'text-muted'
           }`}
         >
           <CommentIcon size={18} /> Comment

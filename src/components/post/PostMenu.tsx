@@ -1,25 +1,25 @@
-import { useEffect, useRef, useState } from 'react'
-import { EditIcon, MoreIcon, TrashIcon } from '../ui/icons'
+import { useEffect, useRef, useState } from 'react';
+import { EditIcon, MoreIcon, TrashIcon } from '../ui/icons';
 
 interface PostMenuProps {
-  onEdit: () => void
-  onDelete: () => void
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
 export default function PostMenu({ onEdit, onDelete }: PostMenuProps) {
-  const [open, setOpen] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!open) return
+    if (!open) return;
     const onClick = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false)
+        setOpen(false);
       }
-    }
-    document.addEventListener('mousedown', onClick)
-    return () => document.removeEventListener('mousedown', onClick)
-  }, [open])
+    };
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
+  }, [open]);
 
   return (
     <div ref={ref} className="relative">
@@ -43,8 +43,8 @@ export default function PostMenu({ onEdit, onDelete }: PostMenuProps) {
             type="button"
             role="menuitem"
             onClick={() => {
-              setOpen(false)
-              onEdit()
+              setOpen(false);
+              onEdit();
             }}
             className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-brand transition-colors hover:bg-brand-50"
           >
@@ -54,8 +54,8 @@ export default function PostMenu({ onEdit, onDelete }: PostMenuProps) {
             type="button"
             role="menuitem"
             onClick={() => {
-              setOpen(false)
-              onDelete()
+              setOpen(false);
+              onDelete();
             }}
             className="flex w-full items-center gap-3 px-4 py-2.5 text-sm font-medium text-accent transition-colors hover:bg-accent-50"
           >
@@ -64,5 +64,5 @@ export default function PostMenu({ onEdit, onDelete }: PostMenuProps) {
         </div>
       )}
     </div>
-  )
+  );
 }

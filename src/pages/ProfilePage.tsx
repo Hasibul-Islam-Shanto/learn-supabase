@@ -1,24 +1,24 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import toast from "react-hot-toast";
-import type { PostFromRPC, Profile } from "../types";
-import Avatar from "../components/ui/Avatar";
-import Button from "../components/ui/Button";
-import Modal from "../components/ui/Modal";
-import TextField from "../components/ui/TextField";
-import PostCard from "../components/post/PostCard";
-import CreatePostBox from "../components/post/CreatePostBox";
-import PostComposer from "../components/post/PostComposer";
-import DeleteConfirm from "../components/post/DeleteConfirm";
-import { LocationIcon } from "../components/ui/icons";
-import { supabase } from "../utils/supabase";
-import { useAuth } from "../context/auth-context";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import type { PostFromRPC, Profile } from '../types';
+import Avatar from '../components/ui/Avatar';
+import Button from '../components/ui/Button';
+import Modal from '../components/ui/Modal';
+import TextField from '../components/ui/TextField';
+import PostCard from '../components/post/PostCard';
+import CreatePostBox from '../components/post/CreatePostBox';
+import PostComposer from '../components/post/PostComposer';
+import DeleteConfirm from '../components/post/DeleteConfirm';
+import { LocationIcon } from '../components/ui/icons';
+import { supabase } from '../utils/supabase';
+import { useAuth } from '../context/auth-context';
 
 const FALLBACK_COVER =
-  "https://images.unsplash.com/photo-1500964757637-c85e8a162699?w=1200&q=60";
+  'https://images.unsplash.com/photo-1500964757637-c85e8a162699?w=1200&q=60';
 
 function fallbackAvatar(name: string | null) {
-  const n = encodeURIComponent(name ?? "U");
+  const n = encodeURIComponent(name ?? 'U');
   return `https://ui-avatars.com/api/?name=${n}&background=321847&color=fff&size=200`;
 }
 
@@ -61,7 +61,7 @@ export default function ProfilePage() {
     setCoverUploading(true);
     const filePath = `covers/${id}/${Date.now()}_${file.name}`;
     const { error: uploadError } = await supabase.storage
-      .from("meet_images")
+      .from('meet_images')
       .upload(filePath, file, { upsert: true });
     if (uploadError) {
       toast.error(uploadError.message);
@@ -70,23 +70,23 @@ export default function ProfilePage() {
     }
     const {
       data: { publicUrl },
-    } = supabase.storage.from("meet_images").getPublicUrl(filePath);
+    } = supabase.storage.from('meet_images').getPublicUrl(filePath);
     await supabase
-      .from("profiles")
+      .from('profiles')
       .update({ cover_url: publicUrl })
-      .eq("id", id);
+      .eq('id', id);
     setProfile((p) => (p ? { ...p, cover_url: publicUrl } : p));
-    toast.success("Cover photo updated");
+    toast.success('Cover photo updated');
     setCoverUploading(false);
-    e.target.value = "";
+    e.target.value = '';
   };
 
   const [editOpen, setEditOpen] = useState(false);
   const [editForm, setEditForm] = useState<EditForm>({
-    full_name: "",
-    username: "",
-    bio: "",
-    location: "",
+    full_name: '',
+    username: '',
+    bio: '',
+    location: '',
   });
   const [saving, setSaving] = useState(false);
 
@@ -97,40 +97,42 @@ export default function ProfilePage() {
     setPostsLoading(true);
     const [postsRes, likesRes] = await Promise.all([
       supabase
-        .from("posts")
+        .from('posts')
         .select(
           `*, author:profiles!posts_author_id_fkey(id, full_name, username, avatar_url),
           like_count:likes(count), comment_count:comments(count)`,
         )
-        .eq("author_id", id)
-        .order("created_at", { ascending: false }),
+        .eq('author_id', id)
+        .order('created_at', { ascending: false }),
       session?.user.id
         ? supabase
-            .from("likes")
-            .select("post_id")
-            .eq("user_id", session.user.id)
+            .from('likes')
+            .select('post_id')
+            .eq('user_id', session.user.id)
         : Promise.resolve({ data: [] as { post_id: string }[], error: null }),
     ]);
     if (postsRes.error) console.error(postsRes.error);
     const myLikedIds = new Set((likesRes.data ?? []).map((l) => l.post_id));
     const mapped: PostFromRPC[] = (postsRes.data ?? []).map((post) => ({
       ...post,
-      like_count: (post.like_count as unknown as { count: number }[])[0]?.count ?? 0,
-      comment_count: (post.comment_count as unknown as { count: number }[])[0]?.count ?? 0,
+      like_count:
+        (post.like_count as unknown as { count: number }[])[0]?.count ?? 0,
+      comment_count:
+        (post.comment_count as unknown as { count: number }[])[0]?.count ?? 0,
       liked_by_me: myLikedIds.has(post.id),
     }));
     setUserPosts(mapped);
     setPostsLoading(false);
-  }, [id, session?.user.id]);
+  }, [id, session]);
 
   useEffect(() => {
     if (!id) return;
     let cancelled = false;
     const fetchProfile = async () => {
       const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", id)
+        .from('profiles')
+        .select('*')
+        .eq('id', id)
         .single();
       if (cancelled) return;
       if (error) console.error(error);
@@ -149,10 +151,10 @@ export default function ProfilePage() {
 
   const openEditModal = () => {
     setEditForm({
-      full_name: profile?.full_name ?? "",
-      username: profile?.username ?? "",
-      bio: profile?.bio ?? "",
-      location: profile?.location ?? "",
+      full_name: profile?.full_name ?? '',
+      username: profile?.username ?? '',
+      bio: profile?.bio ?? '',
+      location: profile?.location ?? '',
     });
     setEditOpen(true);
   };
@@ -161,14 +163,14 @@ export default function ProfilePage() {
     if (!id) return;
     setSaving(true);
     const { data, error } = await supabase
-      .from("profiles")
+      .from('profiles')
       .update({
         full_name: editForm.full_name || null,
         username: editForm.username || null,
         bio: editForm.bio || null,
         location: editForm.location || null,
       })
-      .eq("id", id)
+      .eq('id', id)
       .select()
       .single();
 
@@ -179,10 +181,10 @@ export default function ProfilePage() {
     }
     setProfile(data as Profile);
     setEditOpen(false);
-    toast.success("Profile updated");
+    toast.success('Profile updated');
   };
 
-  const displayName = profile?.full_name ?? profile?.username ?? "User";
+  const displayName = profile?.full_name ?? profile?.username ?? 'User';
 
   if (loading) {
     return (
@@ -227,7 +229,7 @@ export default function ProfilePage() {
                 className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-lg bg-black/50 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm transition hover:bg-black/70 disabled:opacity-60"
               >
                 {coverUploading ? (
-                  "Uploading…"
+                  'Uploading…'
                 ) : (
                   <>
                     <svg
@@ -277,11 +279,11 @@ export default function ProfilePage() {
               ) : (
                 <>
                   <Button
-                    variant={following ? "outline" : "accent"}
+                    variant={following ? 'outline' : 'accent'}
                     size="sm"
                     onClick={() => setFollowing((v) => !v)}
                   >
-                    {following ? "Following" : "Follow"}
+                    {following ? 'Following' : 'Follow'}
                   </Button>
                   <Button variant="outline" size="sm">
                     Message
@@ -319,7 +321,7 @@ export default function ProfilePage() {
         </div>
       ) : userPosts.length === 0 ? (
         <div className="rounded-2xl bg-white p-10 text-center text-muted shadow-sm">
-          {displayName.split(" ")[0]} hasn't posted anything yet.
+          {displayName.split(' ')[0]} hasn't posted anything yet.
         </div>
       ) : (
         userPosts.map((post) => (
@@ -363,7 +365,7 @@ export default function ProfilePage() {
               Cancel
             </Button>
             <Button variant="accent" onClick={handleSave} disabled={saving}>
-              {saving ? "Saving…" : "Save changes"}
+              {saving ? 'Saving…' : 'Save changes'}
             </Button>
           </>
         }

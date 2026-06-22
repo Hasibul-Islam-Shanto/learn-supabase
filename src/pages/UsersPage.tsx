@@ -1,20 +1,20 @@
-import { useMemo, useState } from 'react'
-import { users } from '../data/mock'
-import UserCard from '../components/user/UserCard'
-import { SearchIcon } from '../components/ui/icons'
+import { useMemo, useState } from 'react';
+import { users } from '../data/mock';
+import UserCard from '../components/user/UserCard';
+import { SearchIcon } from '../components/ui/icons';
 
 export default function UsersPage() {
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState('');
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase()
-    if (!q) return users
+    const q = query.trim().toLowerCase();
+    if (!q) return users;
     return users.filter(
       (u) =>
         u.name.toLowerCase().includes(q) ||
         u.username.toLowerCase().includes(q),
-    )
-  }, [query])
+    );
+  }, [query]);
 
   return (
     <div className="space-y-4">
@@ -54,5 +54,5 @@ export default function UsersPage() {
         </div>
       )}
     </div>
-  )
+  );
 }

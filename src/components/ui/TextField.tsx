@@ -1,9 +1,9 @@
-import type { InputHTMLAttributes, ReactNode } from 'react'
-import { useId } from 'react'
+import type { InputHTMLAttributes, ReactNode } from 'react';
+import { useId } from 'react';
 
 interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
-  label: string
-  icon?: ReactNode
+  label: string;
+  icon?: ReactNode;
 }
 
 export default function TextField({
@@ -12,7 +12,7 @@ export default function TextField({
   className = '',
   ...props
 }: TextFieldProps) {
-  const id = useId()
+  const id = useId();
   return (
     <div>
       <label
@@ -36,5 +36,5 @@ export default function TextField({
         />
       </div>
     </div>
-  )
+  );
 }

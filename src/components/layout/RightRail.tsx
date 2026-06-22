@@ -1,5 +1,5 @@
-import Avatar from "../ui/Avatar";
-import { users } from "../../data/mock";
+import Avatar from '../ui/Avatar';
+import { users } from '../../data/mock';
 
 export default function RightRail() {
   const activeFriends = users.slice(2, 8);

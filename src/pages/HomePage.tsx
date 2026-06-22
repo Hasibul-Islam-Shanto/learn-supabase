@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
-import type { PostFromRPC } from "../types";
-import CreatePostBox from "../components/post/CreatePostBox";
-import PostCard from "../components/post/PostCard";
-import PostComposer from "../components/post/PostComposer";
-import DeleteConfirm from "../components/post/DeleteConfirm";
-import { supabase } from "../utils/supabase";
-import { useAuth } from "../context/auth-context";
+import { useCallback, useEffect, useState } from 'react';
+import type { PostFromRPC } from '../types';
+import CreatePostBox from '../components/post/CreatePostBox';
+import PostCard from '../components/post/PostCard';
+import PostComposer from '../components/post/PostComposer';
+import DeleteConfirm from '../components/post/DeleteConfirm';
+import { supabase } from '../utils/supabase';
+import { useAuth } from '../context/auth-context';
 
 export default function HomePage() {
   const [composerOpen, setComposerOpen] = useState(false);
@@ -19,11 +19,11 @@ export default function HomePage() {
     if (!session?.user.id) return;
     try {
       setLoading(true);
-      const { data, error } = await supabase.rpc("get_posts", {
+      const { data, error } = await supabase.rpc('get_posts', {
         p_user_id: session.user.id,
       });
 
-      console.log("data", data);
+      console.log('data', data);
       if (error) console.error(error);
       setAllPosts((data as PostFromRPC[]) ?? []);
     } catch (error) {

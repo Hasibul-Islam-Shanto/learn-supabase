@@ -1,8 +1,8 @@
-import { Navigate, Outlet } from "react-router-dom";
-import Navbar from "./Navbar";
-import Sidebar from "./Sidebar";
-import RightRail from "./RightRail";
-import { useAuth } from "../../context/auth-context";
+import { Navigate, Outlet } from 'react-router-dom';
+import Navbar from './Navbar';
+import Sidebar from './Sidebar';
+import RightRail from './RightRail';
+import { useAuth } from '../../context/auth-context';
 
 export default function AppLayout() {
   const { session } = useAuth();

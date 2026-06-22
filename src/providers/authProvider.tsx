@@ -1,7 +1,7 @@
-import type { Session } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
-import { supabase } from "../utils/supabase";
-import { AuthContext } from "../context/auth-context";
+import type { Session } from '@supabase/supabase-js';
+import { useEffect, useState } from 'react';
+import { supabase } from '../utils/supabase';
+import { AuthContext } from '../context/auth-context';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);

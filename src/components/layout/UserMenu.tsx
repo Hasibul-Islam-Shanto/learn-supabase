@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import toast from "react-hot-toast";
-import type { User } from "@supabase/supabase-js";
-import { supabase } from "../../utils/supabase";
-import Avatar from "../ui/Avatar";
-import { ProfileIcon } from "../ui/icons";
+import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import type { User } from '@supabase/supabase-js';
+import { supabase } from '../../utils/supabase';
+import Avatar from '../ui/Avatar';
+import { ProfileIcon } from '../ui/icons';
 
 interface UserMenuProps {
   user: User;
@@ -14,8 +14,8 @@ function displayName(user: User): string {
   return (
     (user.user_metadata?.name as string | undefined) ??
     (user.user_metadata?.full_name as string | undefined) ??
-    user.email?.split("@")[0] ??
-    "Account"
+    user.email?.split('@')[0] ??
+    'Account'
   );
 }
 
@@ -37,8 +37,8 @@ export default function UserMenu({ user }: UserMenuProps) {
         setOpen(false);
       }
     };
-    document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
   }, [open]);
 
   const handleLogout = async () => {
@@ -48,7 +48,7 @@ export default function UserMenu({ user }: UserMenuProps) {
       toast.error(error.message);
       return;
     }
-    toast.success("Signed out");
+    toast.success('Signed out');
   };
 
   const name = displayName(user);

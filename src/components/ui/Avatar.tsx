@@ -1,9 +1,9 @@
 interface AvatarProps {
-  src: string
-  alt: string
-  size?: number
-  ring?: boolean
-  online?: boolean
+  src: string;
+  alt: string;
+  size?: number;
+  ring?: boolean;
+  online?: boolean;
 }
 
 export default function Avatar({
@@ -29,5 +29,5 @@ export default function Avatar({
         <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-green-500" />
       )}
     </span>
-  )
+  );
 }

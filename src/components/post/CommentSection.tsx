@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import type { Comment } from "../../types";
-import Avatar from "../ui/Avatar";
-import { SendIcon, SmileIcon } from "../ui/icons";
-import { formatDate } from "../../utils/date-format";
-import { supabase } from "../../utils/supabase";
-import { useAuth } from "../../context/auth-context";
-import toast from "react-hot-toast";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import type { Comment } from '../../types';
+import Avatar from '../ui/Avatar';
+import { SendIcon, SmileIcon } from '../ui/icons';
+import { formatDate } from '../../utils/date-format';
+import { supabase } from '../../utils/supabase';
+import { useAuth } from '../../context/auth-context';
+import toast from 'react-hot-toast';
 
 const PREVIEW_COUNT = 3;
 
@@ -25,19 +25,19 @@ export default function CommentSection({
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
-  const [commentText, setCommentText] = useState("");
+  const [commentText, setCommentText] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const fetchComments = useCallback(async () => {
     const { data, error } = await supabase
-      .from("comments")
+      .from('comments')
       .select(
         `id, content, created_at, author_id,
         author:profiles!comments_author_id_fkey(id, full_name, username, avatar_url)`,
       )
-      .eq("post_id", postId)
-      .order("created_at", { ascending: true })
+      .eq('post_id', postId)
+      .order('created_at', { ascending: true })
       .limit(100);
 
     if (!error && data) setComments((data as unknown as Comment[]) ?? []);
@@ -52,7 +52,7 @@ export default function CommentSection({
     const text = commentText.trim();
     if (!text || !session?.user.id) return;
     setSubmitting(true);
-    const { error } = await supabase.from("comments").insert({
+    const { error } = await supabase.from('comments').insert({
       post_id: postId,
       author_id: session.user.id,
       content: text,
@@ -60,7 +60,7 @@ export default function CommentSection({
     if (error) {
       toast.error(error.message);
     } else {
-      setCommentText("");
+      setCommentText('');
       onCountChange(1);
       await fetchComments();
     }
@@ -85,7 +85,7 @@ export default function CommentSection({
               onClick={() => setShowAll(true)}
               className="mb-3 text-sm font-semibold text-brand-700 hover:underline"
             >
-              View {hiddenCount} more comment{hiddenCount > 1 ? "s" : ""}
+              View {hiddenCount} more comment{hiddenCount > 1 ? 's' : ''}
             </button>
           )}
           {showAll && comments.length > PREVIEW_COUNT && (
@@ -110,8 +110,8 @@ export default function CommentSection({
                     className="shrink-0"
                   >
                     <Avatar
-                      src={comment.author?.avatar_url ?? "/default-avatar.png"}
-                      alt={comment.author?.full_name ?? ""}
+                      src={comment.author?.avatar_url ?? '/default-avatar.png'}
+                      alt={comment.author?.full_name ?? ''}
                       size={32}
                     />
                   </Link>
@@ -142,7 +142,7 @@ export default function CommentSection({
       <div className="flex items-center gap-2">
         <Avatar
           src={
-            session?.user?.user_metadata?.avatar_url ?? "/default-avatar.png"
+            session?.user?.user_metadata?.avatar_url ?? '/default-avatar.png'
           }
           alt=""
           size={32}
@@ -155,7 +155,7 @@ export default function CommentSection({
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) handleSubmit();
+              if (e.key === 'Enter' && !e.shiftKey) handleSubmit();
             }}
             disabled={submitting}
             className="w-full rounded-full bg-canvas py-2 pl-4 pr-10 text-sm text-brand placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-brand-100 disabled:opacity-60"

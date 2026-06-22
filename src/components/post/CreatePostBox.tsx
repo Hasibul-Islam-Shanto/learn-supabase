@@ -1,9 +1,9 @@
-import Avatar from '../ui/Avatar'
-import { currentUser } from '../../data/mock'
-import { ImageIcon, SmileIcon, VideoIcon } from '../ui/icons'
+import Avatar from '../ui/Avatar';
+import { currentUser } from '../../data/mock';
+import { ImageIcon, SmileIcon, VideoIcon } from '../ui/icons';
 
 interface CreatePostBoxProps {
-  onOpen: () => void
+  onOpen: () => void;
 }
 
 export default function CreatePostBox({ onOpen }: CreatePostBoxProps) {
@@ -43,5 +43,5 @@ export default function CreatePostBox({ onOpen }: CreatePostBoxProps) {
         </button>
       </div>
     </div>
-  )
+  );
 }

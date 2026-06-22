@@ -1,4 +1,4 @@
-import type { User } from '../types'
+import type { User } from '../types';
 
 interface MockPost {
   id: string;
@@ -117,9 +117,9 @@ export const users: User[] = [
     following: 365,
     postsCount: 98,
   },
-]
+];
 
-export const currentUser: User = users[0]
+export const currentUser: User = users[0];
 
 export const posts: MockPost[] = [
   {
@@ -185,12 +185,12 @@ export const posts: MockPost[] = [
     comments: 19,
     shares: 4,
   },
-]
+];
 
 export function getUser(id: string): User | undefined {
-  return users.find((u) => u.id === id)
+  return users.find((u) => u.id === id);
 }
 
 export function getPostsByUser(id: string): MockPost[] {
-  return posts.filter((p) => p.authorId === id)
+  return posts.filter((p) => p.authorId === id);
 }

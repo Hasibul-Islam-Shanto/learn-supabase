@@ -1,16 +1,16 @@
-import { Link, useNavigate } from "react-router-dom";
-import AuthLayout from "../components/auth/AuthLayout";
-import Button from "../components/ui/Button";
-import TextField from "../components/ui/TextField";
-import { LockIcon, MailIcon } from "../components/ui/icons";
-import { useState } from "react";
-import { supabase } from "../utils/supabase";
-import toast from "react-hot-toast";
+import { Link, useNavigate } from 'react-router-dom';
+import AuthLayout from '../components/auth/AuthLayout';
+import Button from '../components/ui/Button';
+import TextField from '../components/ui/TextField';
+import { LockIcon, MailIcon } from '../components/ui/icons';
+import { useState } from 'react';
+import { supabase } from '../utils/supabase';
+import toast from 'react-hot-toast';
 
 export default function SignUpPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [isAgreed, setIsAgreed] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -22,13 +22,13 @@ export default function SignUpPage() {
         password,
       });
       if (!error && data) {
-        toast.success("Account created successfully");
-        navigate("/signin");
+        toast.success('Account created successfully');
+        navigate('/signin');
       } else {
-        toast.error((error as Error).message || "Something went wrong");
+        toast.error((error as Error).message || 'Something went wrong');
       }
     } catch (error) {
-      toast.error((error as Error).message || "Something went wrong");
+      toast.error((error as Error).message || 'Something went wrong');
     } finally {
       setIsLoading(false);
     }
@@ -41,7 +41,7 @@ export default function SignUpPage() {
       subtitle="Join Meet and start sharing in minutes."
       footer={
         <>
-          Already have an account?{" "}
+          Already have an account?{' '}
           <Link
             to="/signin"
             className="font-semibold text-accent hover:underline"
@@ -79,11 +79,11 @@ export default function SignUpPage() {
             onChange={(e) => setIsAgreed(e.target.checked)}
           />
           <span>
-            I agree to the{" "}
+            I agree to the{' '}
             <a href="#" className="font-medium text-accent hover:underline">
               Terms
-            </a>{" "}
-            and{" "}
+            </a>{' '}
+            and{' '}
             <a href="#" className="font-medium text-accent hover:underline">
               Privacy Policy
             </a>
@@ -97,7 +97,7 @@ export default function SignUpPage() {
           fullWidth
           disabled={!isFormValid}
         >
-          {isLoading ? "Creating account..." : "Create account"}
+          {isLoading ? 'Creating account...' : 'Create account'}
         </Button>
       </form>
     </AuthLayout>

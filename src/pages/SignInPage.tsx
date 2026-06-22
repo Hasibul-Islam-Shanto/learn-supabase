@@ -1,16 +1,16 @@
-import { Link, useNavigate } from "react-router-dom";
-import AuthLayout from "../components/auth/AuthLayout";
-import Button from "../components/ui/Button";
-import TextField from "../components/ui/TextField";
-import { LockIcon, MailIcon } from "../components/ui/icons";
-import { supabase } from "../utils/supabase";
-import { useState } from "react";
-import toast from "react-hot-toast";
+import { Link, useNavigate } from 'react-router-dom';
+import AuthLayout from '../components/auth/AuthLayout';
+import Button from '../components/ui/Button';
+import TextField from '../components/ui/TextField';
+import { LockIcon, MailIcon } from '../components/ui/icons';
+import { supabase } from '../utils/supabase';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function SignInPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -22,13 +22,13 @@ export default function SignInPage() {
         password,
       });
       if (!error && data) {
-        toast.success("Signed in successfully");
-        navigate("/");
+        toast.success('Signed in successfully');
+        navigate('/');
       } else {
-        toast.error((error as Error).message || "Something went wrong");
+        toast.error((error as Error).message || 'Something went wrong');
       }
     } catch (error) {
-      toast.error((error as Error).message || "Something went wrong");
+      toast.error((error as Error).message || 'Something went wrong');
     } finally {
       setIsLoading(false);
     }
@@ -42,7 +42,7 @@ export default function SignInPage() {
       subtitle="Sign in to continue to your feed."
       footer={
         <>
-          Don't have an account?{" "}
+          Don't have an account?{' '}
           <Link
             to="/signup"
             className="font-semibold text-accent hover:underline"
@@ -92,7 +92,7 @@ export default function SignInPage() {
           fullWidth
           disabled={!isFormValid}
         >
-          {isLoading ? "Signing in..." : "Sign in"}
+          {isLoading ? 'Signing in...' : 'Sign in'}
         </Button>
       </form>
     </AuthLayout>
