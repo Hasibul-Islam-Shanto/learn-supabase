@@ -145,6 +145,13 @@ export const PlusIcon = ({ size = 18, className = '' }: IconProps) => (
   </svg>
 );
 
+export const CameraIcon = ({ size = 18, className = '' }: IconProps) => (
+  <svg {...base(size, className)}>
+    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3l2-3h8l2 3h3a2 2 0 0 1 2 2Z" />
+    <circle cx="12" cy="13" r="4" />
+  </svg>
+);
+
 export const LocationIcon = ({ size = 16, className = '' }: IconProps) => (
   <svg {...base(size, className)}>
     <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />

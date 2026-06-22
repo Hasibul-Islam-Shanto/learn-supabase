@@ -6,6 +6,7 @@ import PostComposer from '../components/post/PostComposer';
 import DeleteConfirm from '../components/post/DeleteConfirm';
 import { supabase } from '../utils/supabase';
 import { useAuth } from '../context/auth-context';
+import { toast } from 'react-hot-toast';
 
 export default function HomePage() {
   const [composerOpen, setComposerOpen] = useState(false);
@@ -23,7 +24,6 @@ export default function HomePage() {
         p_user_id: session.user.id,
       });
 
-      console.log('data', data);
       if (error) console.error(error);
       setAllPosts((data as PostFromRPC[]) ?? []);
     } catch (error) {
@@ -51,6 +51,14 @@ export default function HomePage() {
     fetchPosts();
   };
 
+  const handleDeletePost = async (post: PostFromRPC) => {
+    const { error } = await supabase.from('posts').delete().eq('id', post.id);
+    if (error) console.error(error);
+    handleRefetchPosts();
+    setDeletingPost(null);
+    toast.success('Post deleted successfully');
+  };
+
   return (
     <div className="space-y-4">
       <CreatePostBox onOpen={openCreate} />
@@ -70,7 +78,7 @@ export default function HomePage() {
           post={post}
           canManage={post.author_id === session?.user.id}
           onEdit={openEdit}
-          onDelete={setDeletingPost}
+          onDelete={() => handleDeletePost(post)}
           onRefetchPosts={handleRefetchPosts}
         />
       ))}

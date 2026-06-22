@@ -54,7 +54,6 @@ export default function PostCard({
 
   return (
     <article className="overflow-hidden rounded-2xl bg-white shadow-sm">
-      {/* Header */}
       <div className="flex items-center gap-3 px-4 pt-4">
         <Link to={`/profile/${post.author?.id}`}>
           <Avatar
@@ -80,14 +79,12 @@ export default function PostCard({
         )}
       </div>
 
-      {/* Content */}
       {post.content && (
         <p className="px-4 pt-3 text-[15px] leading-relaxed text-brand-900">
           {post.content}
         </p>
       )}
 
-      {/* Image */}
       {post.image_url && (
         <div className="mt-3">
           <img
@@ -98,7 +95,6 @@ export default function PostCard({
         </div>
       )}
 
-      {/* Like / comment summary */}
       <div className="flex items-center gap-4 px-4 py-3 text-sm text-muted">
         <span className="inline-flex items-center gap-1.5">
           <HeartIcon size={16} className="text-accent" filled />
@@ -118,7 +114,6 @@ export default function PostCard({
         </span>
       </div>
 
-      {/* Action buttons */}
       <div className="mx-4 grid grid-cols-3 gap-1 border-t border-line py-1">
         <button
           type="button"
@@ -146,7 +141,6 @@ export default function PostCard({
         </button>
       </div>
 
-      {/* Comment section */}
       {commentsOpen && (
         <CommentSection
           postId={post.id}
