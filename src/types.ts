@@ -11,6 +11,13 @@ export interface User {
   postsCount: number;
 }
 
+export interface ProfileSummary {
+  id: string;
+  full_name: string | null;
+  username: string | null;
+  avatar_url: string | null;
+}
+
 export interface Profile {
   id: string;
   username: string | null;

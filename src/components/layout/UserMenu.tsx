@@ -2,16 +2,20 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import type { User } from '@supabase/supabase-js';
+import type { Profile } from '../../types';
 import { supabase } from '../../utils/supabase';
 import Avatar from '../ui/Avatar';
 import { ProfileIcon } from '../ui/icons';
 
 interface UserMenuProps {
+  profile: Profile | null;
   user: User;
 }
 
-function displayName(user: User): string {
+function displayName(profile: Profile | null, user: User): string {
   return (
+    profile?.full_name ??
+    profile?.username ??
     (user.user_metadata?.name as string | undefined) ??
     (user.user_metadata?.full_name as string | undefined) ??
     user.email?.split('@')[0] ??
@@ -19,14 +23,15 @@ function displayName(user: User): string {
   );
 }
 
-function avatarUrl(user: User): string {
-  const fromMeta = user.user_metadata?.avatar_url as string | undefined;
-  if (fromMeta) return fromMeta;
-  const name = encodeURIComponent(displayName(user));
-  return `https://ui-avatars.com/api/?name=${name}&background=321847&color=fff`;
+function avatarUrl(profile: Profile | null, user: User): string | null {
+  return (
+    profile?.avatar_url ??
+    (user.user_metadata?.avatar_url as string | undefined) ??
+    null
+  );
 }
 
-export default function UserMenu({ user }: UserMenuProps) {
+export default function UserMenu({ profile, user }: UserMenuProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -51,7 +56,8 @@ export default function UserMenu({ user }: UserMenuProps) {
     toast.success('Signed out');
   };
 
-  const name = displayName(user);
+  const name = displayName(profile, user);
+  const src = avatarUrl(profile, user);
 
   return (
     <div ref={ref} className="relative ml-1">
@@ -63,7 +69,7 @@ export default function UserMenu({ user }: UserMenuProps) {
         onClick={() => setOpen((v) => !v)}
         className="flex items-center rounded-full transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
       >
-        <Avatar src={avatarUrl(user)} alt={name} size={38} />
+        <Avatar src={src} name={name} alt={name} size={38} />
       </button>
 
       {open && (
@@ -72,7 +78,7 @@ export default function UserMenu({ user }: UserMenuProps) {
           className="absolute right-0 top-12 z-30 w-56 overflow-hidden rounded-xl border border-line bg-white py-1 shadow-lg"
         >
           <div className="flex items-center gap-3 border-b border-line px-4 py-3">
-            <Avatar src={avatarUrl(user)} alt={name} size={40} />
+            <Avatar src={src} name={name} alt={name} size={40} />
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold text-brand">
                 {name}

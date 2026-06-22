@@ -6,8 +6,7 @@ import { useAuth } from '../../context/auth-context';
 import UserMenu from './UserMenu';
 
 export default function Navbar() {
-  const { session } = useAuth();
-
+  const { session, profile } = useAuth();
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-white/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4">
@@ -44,7 +43,7 @@ export default function Navbar() {
               <IconButton label="Notifications" className="bg-canvas">
                 <BellIcon />
               </IconButton>
-              <UserMenu user={session.user} />
+              <UserMenu profile={profile} user={session.user} />
             </>
           ) : (
             <Link to="/signin">
