@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import type { Post, Profile } from "../types";
-import { getPostsByUser } from "../data/mock";
+import type { PostFromRPC, Profile } from "../types";
 import Avatar from "../components/ui/Avatar";
 import Button from "../components/ui/Button";
 import Modal from "../components/ui/Modal";
@@ -48,8 +47,10 @@ export default function ProfilePage() {
 
   const [following, setFollowing] = useState(false);
   const [composerOpen, setComposerOpen] = useState(false);
-  const [editingPost, setEditingPost] = useState<Post | null>(null);
-  const [deletingPost, setDeletingPost] = useState<Post | null>(null);
+  const [editingPost, setEditingPost] = useState<PostFromRPC | null>(null);
+  const [deletingPost, setDeletingPost] = useState<PostFromRPC | null>(null);
+  const [userPosts, setUserPosts] = useState<PostFromRPC[]>([]);
+  const [postsLoading, setPostsLoading] = useState(false);
 
   const [coverUploading, setCoverUploading] = useState(false);
   const coverInputRef = useRef<HTMLInputElement>(null);
@@ -90,7 +91,37 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
 
   const isMe = session?.user.id === id;
-  const userPosts = getPostsByUser(profile?.id ?? "");
+
+  const fetchUserPosts = useCallback(async () => {
+    if (!id) return;
+    setPostsLoading(true);
+    const [postsRes, likesRes] = await Promise.all([
+      supabase
+        .from("posts")
+        .select(
+          `*, author:profiles!posts_author_id_fkey(id, full_name, username, avatar_url),
+          like_count:likes(count), comment_count:comments(count)`,
+        )
+        .eq("author_id", id)
+        .order("created_at", { ascending: false }),
+      session?.user.id
+        ? supabase
+            .from("likes")
+            .select("post_id")
+            .eq("user_id", session.user.id)
+        : Promise.resolve({ data: [] as { post_id: string }[], error: null }),
+    ]);
+    if (postsRes.error) console.error(postsRes.error);
+    const myLikedIds = new Set((likesRes.data ?? []).map((l) => l.post_id));
+    const mapped: PostFromRPC[] = (postsRes.data ?? []).map((post) => ({
+      ...post,
+      like_count: (post.like_count as unknown as { count: number }[])[0]?.count ?? 0,
+      comment_count: (post.comment_count as unknown as { count: number }[])[0]?.count ?? 0,
+      liked_by_me: myLikedIds.has(post.id),
+    }));
+    setUserPosts(mapped);
+    setPostsLoading(false);
+  }, [id, session?.user.id]);
 
   useEffect(() => {
     if (!id) return;
@@ -111,6 +142,10 @@ export default function ProfilePage() {
       cancelled = true;
     };
   }, [id]);
+
+  useEffect(() => {
+    fetchUserPosts(); // eslint-disable-line react-hooks/set-state-in-effect
+  }, [fetchUserPosts]);
 
   const openEditModal = () => {
     setEditForm({
@@ -269,7 +304,7 @@ export default function ProfilePage() {
           )}
 
           <div className="mt-4 flex gap-8 border-t border-line pt-4">
-            <Stat label="Posts" value={userPosts.length} />
+            <Stat label="Posts" value={userPosts.length ?? 0} />
             <Stat label="Followers" value={0} />
             <Stat label="Following" value={0} />
           </div>
@@ -278,7 +313,11 @@ export default function ProfilePage() {
 
       {isMe && <CreatePostBox onOpen={() => setComposerOpen(true)} />}
 
-      {userPosts.length === 0 ? (
+      {postsLoading ? (
+        <div className="rounded-2xl bg-white p-10 text-center text-muted shadow-sm">
+          Loading posts…
+        </div>
+      ) : userPosts.length === 0 ? (
         <div className="rounded-2xl bg-white p-10 text-center text-muted shadow-sm">
           {displayName.split(" ")[0]} hasn't posted anything yet.
         </div>
@@ -293,6 +332,7 @@ export default function ProfilePage() {
               setComposerOpen(true);
             }}
             onDelete={setDeletingPost}
+            onRefetchPosts={fetchUserPosts}
           />
         ))
       )}
@@ -304,6 +344,7 @@ export default function ProfilePage() {
           setEditingPost(null);
         }}
         editingPost={editingPost}
+        refetchPosts={fetchUserPosts}
       />
       <DeleteConfirm
         open={Boolean(deletingPost)}

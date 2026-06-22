@@ -58,7 +58,7 @@ export default function PostComposer({
       const { error } = await supabase.from("posts").insert({
         content,
         image_url: image,
-        author_id: currentUser.id,
+        author_id: currentUser?.id ?? "",
       });
       if (error) {
         toast.error(error.message);
@@ -108,7 +108,7 @@ export default function PostComposer({
       }
     >
       <div className="flex items-center gap-3">
-        <UserAvatar user={currentUser} />
+        {currentUser && <UserAvatar user={currentUser} />}
         <div>
           <p className="font-semibold text-brand">
             {currentUser?.user_metadata?.name}

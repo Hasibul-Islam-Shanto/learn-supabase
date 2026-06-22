@@ -18,7 +18,7 @@ function avatarUrl(user: User): string {
 }
 
 const UserAvatar = ({ user }: { user: User }) => {
-  return <Avatar src={avatarUrl(user)} alt={user.email} size={38} />;
+  return <Avatar src={avatarUrl(user)} alt={user.email ?? displayName(user)} size={38} />;
 };
 
 export default UserAvatar;
