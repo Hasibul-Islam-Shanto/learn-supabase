@@ -87,6 +87,14 @@ export interface DiscoverUser {
   is_following: boolean;
 }
 
+export interface SearchUserResult {
+  id: string;
+  full_name: string | null;
+  username: string | null;
+  avatar_url: string | null;
+  bio: string | null;
+}
+
 export type NotificationType = 'like' | 'comment' | 'follow';
 
 export interface AppNotification {

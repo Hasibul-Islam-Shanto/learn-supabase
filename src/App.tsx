@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import UsersPage from './pages/UsersPage';
 import ProfilePage from './pages/ProfilePage';
 import PostPage from './pages/PostPage';
+import SearchPage from './pages/SearchPage';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
 import { currentUser } from './data/mock';
@@ -26,6 +27,7 @@ function App() {
       <Route element={<AppLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/post/:id" element={<PostPage />} />
+        <Route path="/search" element={<SearchPage />} />
         <Route path="/users" element={<UsersPage />} />
         <Route path="/profile/:id" element={<ProfilePage />} />
         <Route
