@@ -76,6 +76,17 @@ export interface PostFromRPC {
   comment_count: number | null;
 }
 
+export interface DiscoverUser {
+  id: string;
+  full_name: string | null;
+  username: string | null;
+  avatar_url: string | null;
+  cover_url: string | null;
+  bio: string | null;
+  follower_count: number;
+  is_following: boolean;
+}
+
 export type NotificationType = 'like' | 'comment' | 'follow';
 
 export interface AppNotification {

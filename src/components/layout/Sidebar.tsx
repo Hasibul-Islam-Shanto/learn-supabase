@@ -19,7 +19,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { to: '/', label: 'Home', icon: <HomeIcon />, end: true },
-  { to: '/users', label: 'Friends', icon: <UsersIcon /> },
+  { to: '/users', label: 'Find followers', icon: <UsersIcon /> },
   {
     to: `/profile`,
     label: 'Profile',

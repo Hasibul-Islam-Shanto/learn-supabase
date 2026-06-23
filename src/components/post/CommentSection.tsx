@@ -79,7 +79,6 @@ export default function CommentSection({
         </div>
       ) : (
         <>
-          {/* "View more" toggle */}
           {!showAll && hiddenCount > 0 && (
             <button
               onClick={() => setShowAll(true)}
@@ -138,7 +137,6 @@ export default function CommentSection({
         </>
       )}
 
-      {/* Comment composer */}
       <div className="flex items-center gap-2">
         <Avatar
           src={
