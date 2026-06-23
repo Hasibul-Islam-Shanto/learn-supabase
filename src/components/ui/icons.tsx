@@ -85,15 +85,6 @@ export const CommentIcon = ({ size = 20, className = '' }: IconProps) => (
   </svg>
 );
 
-export const ShareIcon = ({ size = 20, className = '' }: IconProps) => (
-  <svg {...base(size, className)}>
-    <circle cx="18" cy="5" r="3" />
-    <circle cx="6" cy="12" r="3" />
-    <circle cx="18" cy="19" r="3" />
-    <path d="m8.6 13.5 6.8 4M15.4 6.5 8.6 10.5" />
-  </svg>
-);
-
 export const MoreIcon = ({ size = 20, className = '' }: IconProps) => (
   <svg {...base(size, className)}>
     <circle cx="12" cy="5" r="1" />
