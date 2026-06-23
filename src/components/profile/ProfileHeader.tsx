@@ -12,6 +12,9 @@ interface ProfileHeaderProps {
   isMe: boolean;
   postsCount: number;
   following: boolean;
+  followPending: boolean;
+  followerCount: number;
+  followingCount: number;
   uploadingField: ProfileImageField | null;
   onToggleFollow: () => void;
   onEditProfile: () => void;
@@ -23,6 +26,9 @@ export default function ProfileHeader({
   isMe,
   postsCount,
   following,
+  followPending,
+  followerCount,
+  followingCount,
   uploadingField,
   onToggleFollow,
   onEditProfile,
@@ -61,6 +67,7 @@ export default function ProfileHeader({
             <ProfileActions
               isMe={isMe}
               following={following}
+              pending={followPending}
               onToggleFollow={onToggleFollow}
               onEdit={onEditProfile}
             />
@@ -77,7 +84,11 @@ export default function ProfileHeader({
           </p>
         )}
 
-        <ProfileStats posts={postsCount} followers={0} following={0} />
+        <ProfileStats
+          posts={postsCount}
+          followers={followerCount}
+          following={followingCount}
+        />
       </div>
     </div>
   );

@@ -11,9 +11,14 @@ interface UseProfileResult {
   postsLoading: boolean;
   saving: boolean;
   uploadingField: ProfileImageField | null;
+  followerCount: number;
+  followingCount: number;
+  isFollowing: boolean;
+  followPending: boolean;
   fetchPosts: () => Promise<void>;
   updateProfile: (values: EditableProfileFields) => Promise<boolean>;
   uploadImage: (file: File, field: ProfileImageField) => Promise<void>;
+  toggleFollow: () => Promise<void>;
 }
 
 export function useProfile(
@@ -27,6 +32,10 @@ export function useProfile(
   const [saving, setSaving] = useState(false);
   const [uploadingField, setUploadingField] =
     useState<ProfileImageField | null>(null);
+  const [followerCount, setFollowerCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followPending, setFollowPending] = useState(false);
 
   const fetchPosts = useCallback(async () => {
     if (!id) return;
@@ -63,21 +72,47 @@ export function useProfile(
     if (!id) return;
     let cancelled = false;
     const run = async () => {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', id)
-        .single();
+      const [profileRes, followRes] = await Promise.all([
+        supabase
+          .from('profiles')
+          .select(
+            `*,
+            follower_count:follows!follows_following_id_fkey(count),
+            following_count:follows!follows_follower_id_fkey(count)`,
+          )
+          .eq('id', id)
+          .single(),
+        currentUserId && currentUserId !== id
+          ? supabase
+              .from('follows')
+              .select('follower_id')
+              .eq('follower_id', currentUserId)
+              .eq('following_id', id)
+              .maybeSingle()
+          : Promise.resolve({ data: null, error: null }),
+      ]);
       if (cancelled) return;
+      const { data, error } = profileRes;
       if (error) console.error(error);
-      if (data) setProfile(data as Profile);
+      if (data) {
+        setProfile(data as Profile);
+        setFollowerCount(
+          (data.follower_count as unknown as { count: number }[])[0]?.count ??
+            0,
+        );
+        setFollowingCount(
+          (data.following_count as unknown as { count: number }[])[0]?.count ??
+            0,
+        );
+      }
+      setIsFollowing(Boolean(followRes.data));
       setLoading(false);
     };
     run();
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [id, currentUserId]);
 
   useEffect(() => {
     fetchPosts(); // eslint-disable-line react-hooks/set-state-in-effect
@@ -147,6 +182,29 @@ export function useProfile(
     [id],
   );
 
+  const toggleFollow = useCallback(async () => {
+    if (!currentUserId || !id || currentUserId === id || followPending) return;
+    const next = !isFollowing;
+    setIsFollowing(next);
+    setFollowerCount((c) => Math.max(0, c + (next ? 1 : -1)));
+    setFollowPending(true);
+    const { error } = next
+      ? await supabase
+          .from('follows')
+          .insert({ follower_id: currentUserId, following_id: id })
+      : await supabase
+          .from('follows')
+          .delete()
+          .eq('follower_id', currentUserId)
+          .eq('following_id', id);
+    setFollowPending(false);
+    if (error) {
+      setIsFollowing(!next);
+      setFollowerCount((c) => Math.max(0, c + (next ? -1 : 1)));
+      toast.error(error.message);
+    }
+  }, [currentUserId, id, isFollowing, followPending]);
+
   return {
     profile,
     loading,
@@ -154,8 +212,13 @@ export function useProfile(
     postsLoading,
     saving,
     uploadingField,
+    followerCount,
+    followingCount,
+    isFollowing,
+    followPending,
     fetchPosts,
     updateProfile,
     uploadImage,
+    toggleFollow,
   };
 }

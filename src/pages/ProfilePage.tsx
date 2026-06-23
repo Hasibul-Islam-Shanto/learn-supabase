@@ -27,12 +27,16 @@ export default function ProfilePage() {
     postsLoading,
     saving,
     uploadingField,
+    followerCount,
+    followingCount,
+    isFollowing,
+    followPending,
     fetchPosts,
     updateProfile,
     uploadImage,
+    toggleFollow,
   } = useProfile(id, currentUserId);
 
-  const [following, setFollowing] = useState(false);
   const [composerOpen, setComposerOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<PostFromRPC | null>(null);
   const [deletingPost, setDeletingPost] = useState<PostFromRPC | null>(null);
@@ -78,9 +82,12 @@ export default function ProfilePage() {
         profile={profile}
         isMe={isMe}
         postsCount={posts.length}
-        following={following}
+        following={isFollowing}
+        followPending={followPending}
+        followerCount={followerCount}
+        followingCount={followingCount}
         uploadingField={uploadingField}
-        onToggleFollow={() => setFollowing((v) => !v)}
+        onToggleFollow={toggleFollow}
         onEditProfile={() => setEditOpen(true)}
         onUploadImage={handleUploadImage}
       />

@@ -3,6 +3,7 @@ import Button from '../ui/Button';
 interface ProfileActionsProps {
   isMe: boolean;
   following: boolean;
+  pending?: boolean;
   onToggleFollow: () => void;
   onEdit: () => void;
 }
@@ -10,6 +11,7 @@ interface ProfileActionsProps {
 export default function ProfileActions({
   isMe,
   following,
+  pending = false,
   onToggleFollow,
   onEdit,
 }: ProfileActionsProps) {
@@ -26,6 +28,7 @@ export default function ProfileActions({
       <Button
         variant={following ? 'outline' : 'accent'}
         size="sm"
+        disabled={pending}
         onClick={onToggleFollow}
       >
         {following ? 'Following' : 'Follow'}
