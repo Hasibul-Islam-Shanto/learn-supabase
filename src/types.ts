@@ -50,12 +50,10 @@ export interface Comment {
   author_id: string;
   content: string;
   created_at: string;
-  author: {
-    id: string;
-    full_name: string | null;
-    username: string | null;
-    avatar_url: string | null;
-  } | null;
+  updated_at?: string | null;
+  like_count: number;
+  liked_by_me: boolean;
+  author: ProfileSummary | null;
 }
 
 export interface PostFromRPC {
