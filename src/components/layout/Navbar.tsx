@@ -1,13 +1,16 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import IconButton from '../ui/IconButton';
 import Button from '../ui/Button';
 import { MessageIcon, SearchIcon } from '../ui/icons';
 import { useAuth } from '../../context/auth-context';
 import UserMenu from './UserMenu';
 import NotificationsMenu from './NotificationsMenu';
+import GlobalSearch from '../search/GlobalSearch';
 
 export default function Navbar() {
+  const navigate = useNavigate();
   const { session, profile } = useAuth();
+
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-white/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4">
@@ -23,21 +26,18 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <div className="relative mx-2 hidden max-w-md flex-1 sm:block">
-          <SearchIcon
-            size={18}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
-          />
-          <input
-            type="search"
-            placeholder="Search for friends, groups, pages"
-            className="w-full rounded-full border border-transparent bg-canvas py-2.5 pl-10 pr-4 text-sm text-brand placeholder:text-muted focus:border-brand-200 focus:bg-white focus:outline-none"
-          />
-        </div>
+        {session && <GlobalSearch />}
 
         <div className="ml-auto flex items-center gap-1">
           {session ? (
             <>
+              <IconButton
+                label="Search"
+                className="bg-canvas sm:hidden"
+                onClick={() => navigate('/search')}
+              >
+                <SearchIcon />
+              </IconButton>
               <IconButton label="Messages" className="bg-canvas">
                 <MessageIcon />
               </IconButton>
