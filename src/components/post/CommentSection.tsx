@@ -1,14 +1,25 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import type { Comment } from '../../types';
 import Avatar from '../ui/Avatar';
 import { SendIcon, SmileIcon } from '../ui/icons';
-import { formatDate } from '../../utils/date-format';
 import { supabase } from '../../utils/supabase';
 import { useAuth } from '../../context/auth-context';
 import toast from 'react-hot-toast';
+import CommentItem from './CommentItem';
+import DeleteConfirm from './DeleteConfirm';
 
 const PREVIEW_COUNT = 3;
+
+interface CommentRow {
+  id: string;
+  post_id: string;
+  author_id: string;
+  content: string;
+  created_at: string;
+  updated_at: string | null;
+  author: Comment['author'];
+  like_count: { count: number }[];
+}
 
 interface CommentSectionProps {
   postId: string;
@@ -22,27 +33,63 @@ export default function CommentSection({
   onCountChange,
 }: CommentSectionProps) {
   const { session } = useAuth();
+  const currentUserId = session?.user.id;
+
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [deletingComment, setDeletingComment] = useState<Comment | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const fetchComments = useCallback(async () => {
     const { data, error } = await supabase
       .from('comments')
       .select(
-        `id, content, created_at, author_id,
-        author:profiles!comments_author_id_fkey(id, full_name, username, avatar_url)`,
+        `id, post_id, author_id, content, created_at, updated_at,
+        author:profiles!comments_author_id_fkey(id, full_name, username, avatar_url),
+        like_count:comment_likes(count)`,
       )
       .eq('post_id', postId)
       .order('created_at', { ascending: true })
       .limit(100);
 
-    if (!error && data) setComments((data as unknown as Comment[]) ?? []);
+    if (error) {
+      console.error(error);
+      setLoading(false);
+      return;
+    }
+
+    const rows = (data ?? []) as unknown as CommentRow[];
+    const commentIds = rows.map((row) => row.id);
+
+    let likedIds = new Set<string>();
+    if (currentUserId && commentIds.length > 0) {
+      const { data: likesData, error: likesError } = await supabase
+        .from('comment_likes')
+        .select('comment_id')
+        .eq('user_id', currentUserId)
+        .in('comment_id', commentIds);
+      if (likesError) console.error(likesError);
+      likedIds = new Set((likesData ?? []).map((l) => l.comment_id));
+    }
+
+    setComments(
+      rows.map((row) => ({
+        id: row.id,
+        post_id: row.post_id,
+        author_id: row.author_id,
+        content: row.content,
+        created_at: row.created_at,
+        updated_at: row.updated_at,
+        like_count: row.like_count[0]?.count ?? 0,
+        liked_by_me: likedIds.has(row.id),
+        author: row.author,
+      })),
+    );
     setLoading(false);
-  }, [postId]);
+  }, [postId, currentUserId]);
 
   useEffect(() => {
     fetchComments(); // eslint-disable-line react-hooks/set-state-in-effect
@@ -50,11 +97,11 @@ export default function CommentSection({
 
   const handleSubmit = async () => {
     const text = commentText.trim();
-    if (!text || !session?.user.id) return;
+    if (!text || !currentUserId) return;
     setSubmitting(true);
     const { error } = await supabase.from('comments').insert({
       post_id: postId,
-      author_id: session.user.id,
+      author_id: currentUserId,
       content: text,
     });
     if (error) {
@@ -66,6 +113,29 @@ export default function CommentSection({
     }
     setSubmitting(false);
     inputRef.current?.focus();
+  };
+
+  const handleCommentUpdate = (updated: Comment) => {
+    setComments((prev) => prev.map((c) => (c.id === updated.id ? updated : c)));
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!deletingComment || !currentUserId) return;
+    const { error } = await supabase
+      .from('comments')
+      .delete()
+      .eq('id', deletingComment.id)
+      .eq('author_id', currentUserId);
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    setComments((prev) => prev.filter((c) => c.id !== deletingComment.id));
+    onCountChange(-1);
+    setDeletingComment(null);
+    toast.success('Comment deleted');
   };
 
   const visibleComments = showAll ? comments : comments.slice(-PREVIEW_COUNT);
@@ -81,6 +151,7 @@ export default function CommentSection({
         <>
           {!showAll && hiddenCount > 0 && (
             <button
+              type="button"
               onClick={() => setShowAll(true)}
               className="mb-3 text-sm font-semibold text-brand-700 hover:underline"
             >
@@ -89,6 +160,7 @@ export default function CommentSection({
           )}
           {showAll && comments.length > PREVIEW_COUNT && (
             <button
+              type="button"
               onClick={() => setShowAll(false)}
               className="mb-3 text-sm font-semibold text-brand-700 hover:underline"
             >
@@ -103,34 +175,13 @@ export default function CommentSection({
           ) : (
             <div className="mb-3 space-y-3">
               {visibleComments.map((comment) => (
-                <div key={comment.id} className="flex gap-2.5">
-                  <Link
-                    to={`/profile/${comment.author?.id}`}
-                    className="shrink-0"
-                  >
-                    <Avatar
-                      src={comment.author?.avatar_url ?? '/default-avatar.png'}
-                      alt={comment.author?.full_name ?? ''}
-                      size={32}
-                    />
-                  </Link>
-                  <div className="min-w-0 flex-1">
-                    <div className="rounded-2xl bg-canvas px-3 py-2">
-                      <Link
-                        to={`/profile/${comment.author?.id}`}
-                        className="text-sm font-semibold text-brand hover:underline"
-                      >
-                        {comment.author?.full_name ?? comment.author?.username}
-                      </Link>
-                      <p className="mt-0.5 text-sm leading-relaxed text-brand-900">
-                        {comment.content}
-                      </p>
-                    </div>
-                    <p className="mt-1 pl-3 text-xs text-muted">
-                      {formatDate(comment.created_at)}
-                    </p>
-                  </div>
-                </div>
+                <CommentItem
+                  key={comment.id}
+                  comment={comment}
+                  currentUserId={currentUserId}
+                  onUpdate={handleCommentUpdate}
+                  onDeleteRequest={setDeletingComment}
+                />
               ))}
             </div>
           )}
@@ -177,6 +228,14 @@ export default function CommentSection({
           />
         </div>
       </div>
+
+      <DeleteConfirm
+        open={Boolean(deletingComment)}
+        onClose={() => setDeletingComment(null)}
+        onConfirm={handleDeleteConfirm}
+        title="Delete comment"
+        message="Are you sure you want to delete this comment? This action cannot be undone."
+      />
     </div>
   );
 }

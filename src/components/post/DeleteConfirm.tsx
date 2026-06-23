@@ -5,18 +5,22 @@ interface DeleteConfirmProps {
   open: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  title?: string;
+  message?: string;
 }
 
 export default function DeleteConfirm({
   open,
   onClose,
   onConfirm,
+  title = 'Delete post',
+  message = 'Are you sure you want to delete this post? This action cannot be undone.',
 }: DeleteConfirmProps) {
   return (
     <Modal
       open={open}
       onClose={onClose}
-      title="Delete post"
+      title={title}
       footer={
         <>
           <Button variant="ghost" onClick={onClose}>
@@ -28,9 +32,7 @@ export default function DeleteConfirm({
         </>
       }
     >
-      <p className="text-sm leading-relaxed text-muted">
-        Are you sure you want to delete this post? This action cannot be undone.
-      </p>
+      <p className="text-sm leading-relaxed text-muted">{message}</p>
     </Modal>
   );
 }
