@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import IconButton from '../ui/IconButton';
 import Button from '../ui/Button';
-import { BellIcon, MessageIcon, SearchIcon } from '../ui/icons';
+import { MessageIcon, SearchIcon } from '../ui/icons';
 import { useAuth } from '../../context/auth-context';
 import UserMenu from './UserMenu';
+import NotificationsMenu from './NotificationsMenu';
 
 export default function Navbar() {
   const { session, profile } = useAuth();
@@ -40,9 +41,7 @@ export default function Navbar() {
               <IconButton label="Messages" className="bg-canvas">
                 <MessageIcon />
               </IconButton>
-              <IconButton label="Notifications" className="bg-canvas">
-                <BellIcon />
-              </IconButton>
+              <NotificationsMenu />
               <UserMenu profile={profile} user={session.user} />
             </>
           ) : (
