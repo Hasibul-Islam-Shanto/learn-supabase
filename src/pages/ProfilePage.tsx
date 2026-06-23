@@ -7,7 +7,9 @@ import DeleteConfirm from '../components/post/DeleteConfirm';
 import ProfileHeader from '../components/profile/ProfileHeader';
 import ProfilePosts from '../components/profile/ProfilePosts';
 import EditProfileModal from '../components/profile/EditProfileModal';
+import FollowListModal from '../components/profile/FollowListModal';
 import { useProfile } from '../components/profile/useProfile';
+import type { FollowListType } from '../components/profile/useFollowList';
 import type {
   EditableProfileFields,
   ProfileImageField,
@@ -41,6 +43,9 @@ export default function ProfilePage() {
   const [editingPost, setEditingPost] = useState<PostFromRPC | null>(null);
   const [deletingPost, setDeletingPost] = useState<PostFromRPC | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+  const [followListType, setFollowListType] = useState<FollowListType | null>(
+    null,
+  );
 
   const handleSave = async (values: EditableProfileFields) => {
     const ok = await updateProfile(values);
@@ -90,6 +95,8 @@ export default function ProfilePage() {
         onToggleFollow={toggleFollow}
         onEditProfile={() => setEditOpen(true)}
         onUploadImage={handleUploadImage}
+        onFollowersClick={() => setFollowListType('followers')}
+        onFollowingClick={() => setFollowListType('following')}
       />
 
       {isMe && <CreatePostBox onOpen={() => setComposerOpen(true)} />}
@@ -130,6 +137,16 @@ export default function ProfilePage() {
         onClose={() => setEditOpen(false)}
         onSave={handleSave}
       />
+
+      {followListType && (
+        <FollowListModal
+          open
+          onClose={() => setFollowListType(null)}
+          profileId={profile.id}
+          type={followListType}
+          displayName={displayName}
+        />
+      )}
     </div>
   );
 }

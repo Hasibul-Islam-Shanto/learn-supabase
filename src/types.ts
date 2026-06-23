@@ -1,16 +1,3 @@
-export interface User {
-  id: string;
-  name: string;
-  username: string;
-  avatar: string;
-  cover: string;
-  bio: string;
-  location?: string;
-  followers: number;
-  following: number;
-  postsCount: number;
-}
-
 export interface ProfileSummary {
   id: string;
   full_name: string | null;

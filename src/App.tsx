@@ -7,8 +7,15 @@ import PostPage from './pages/PostPage';
 import SearchPage from './pages/SearchPage';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
-import { currentUser } from './data/mock';
+import NotFoundPage from './pages/NotFoundPage';
 import { useAuth } from './context/auth-context';
+
+function ProfileRedirect() {
+  const { session } = useAuth();
+  const userId = session?.user.id;
+  if (!userId) return <Navigate to="/signin" replace />;
+  return <Navigate to={`/profile/${userId}`} replace />;
+}
 
 function App() {
   const { session, loading } = useAuth();
@@ -30,12 +37,10 @@ function App() {
         <Route path="/search" element={<SearchPage />} />
         <Route path="/users" element={<UsersPage />} />
         <Route path="/profile/:id" element={<ProfilePage />} />
-        <Route
-          path="/profile"
-          element={<Navigate to={`/profile/${currentUser.id}`} replace />}
-        />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/profile" element={<ProfileRedirect />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

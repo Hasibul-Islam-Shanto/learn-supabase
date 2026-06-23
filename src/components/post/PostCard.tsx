@@ -4,7 +4,7 @@ import type { PostFromRPC } from '../../types';
 import Avatar from '../ui/Avatar';
 import PostMenu from './PostMenu';
 import CommentSection from './CommentSection';
-import { CommentIcon, HeartIcon, ShareIcon } from '../ui/icons';
+import { CommentIcon, HeartIcon } from '../ui/icons';
 import { formatDate } from '../../utils/date-format';
 import { supabase } from '../../utils/supabase';
 import { useAuth } from '../../context/auth-context';
@@ -109,12 +109,9 @@ export default function PostCard({
           {formatCount(commentCount)}{' '}
           {commentCount === 1 ? 'comment' : 'comments'}
         </button>
-        <span className="ml-auto inline-flex items-center gap-1.5">
-          <ShareIcon size={16} /> {formatCount(0)}
-        </span>
       </div>
 
-      <div className="mx-4 grid grid-cols-3 gap-1 border-t border-line py-1">
+      <div className="mx-4 grid grid-cols-2 gap-1 border-t border-line py-1">
         <button
           type="button"
           onClick={handleLike}
@@ -132,12 +129,6 @@ export default function PostCard({
           }`}
         >
           <CommentIcon size={18} /> Comment
-        </button>
-        <button
-          type="button"
-          className="flex items-center justify-center gap-2 rounded-lg py-2 text-sm font-semibold text-muted transition-colors hover:bg-brand-50"
-        >
-          <ShareIcon size={18} /> Share
         </button>
       </div>
 

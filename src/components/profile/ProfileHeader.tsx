@@ -19,6 +19,8 @@ interface ProfileHeaderProps {
   onToggleFollow: () => void;
   onEditProfile: () => void;
   onUploadImage: (file: File, field: ProfileImageField) => void;
+  onFollowersClick?: () => void;
+  onFollowingClick?: () => void;
 }
 
 export default function ProfileHeader({
@@ -33,6 +35,8 @@ export default function ProfileHeader({
   onToggleFollow,
   onEditProfile,
   onUploadImage,
+  onFollowersClick,
+  onFollowingClick,
 }: ProfileHeaderProps) {
   const displayName = profile.full_name ?? profile.username ?? 'User';
 
@@ -88,6 +92,8 @@ export default function ProfileHeader({
           posts={postsCount}
           followers={followerCount}
           following={followingCount}
+          onFollowersClick={onFollowersClick}
+          onFollowingClick={onFollowingClick}
         />
       </div>
     </div>
