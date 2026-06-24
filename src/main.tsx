@@ -5,12 +5,15 @@ import { Toaster } from 'react-hot-toast';
 import './index.css';
 import App from './app/App.tsx';
 import { AuthProvider } from './app/providers/AuthProvider.tsx';
+import { MessagesProvider } from './app/providers/MessagesProvider.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <App />
+        <MessagesProvider>
+          <App />
+        </MessagesProvider>
       </AuthProvider>
       <Toaster />
     </BrowserRouter>

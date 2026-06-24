@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import type { PostFromRPC } from '@/shared/types';
 import EmptyState from '@/shared/components/EmptyState';
@@ -13,6 +13,8 @@ import ProfileHeader from '../components/ProfileHeader';
 import ProfilePosts from '../components/ProfilePosts';
 import EditProfileModal from '../components/EditProfileModal';
 import FollowListModal from '../components/FollowListModal';
+import { getOrCreateConversation } from '@/features/messages/api/conversations';
+import { useMessagesContext } from '@/features/messages/context/messages-context';
 import { useProfile } from '../hooks/useProfile';
 import { useProfilePosts } from '../hooks/useProfilePosts';
 import { useFollow } from '../hooks/useFollow';
@@ -21,7 +23,9 @@ import type { EditableProfileFields, ProfileImageField } from '../types';
 
 export default function ProfilePage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { session, refreshProfile } = useAuth();
+  const { refetch: refetchConversations } = useMessagesContext();
   const currentUserId = session?.user.id;
   const isMe = currentUserId === id;
 
@@ -53,9 +57,23 @@ export default function ProfilePage() {
   const [editingPost, setEditingPost] = useState<PostFromRPC | null>(null);
   const [deletingPost, setDeletingPost] = useState<PostFromRPC | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+  const [messagePending, setMessagePending] = useState(false);
   const [followListType, setFollowListType] = useState<FollowListType | null>(
     null,
   );
+
+  const handleMessage = async () => {
+    if (!id || messagePending) return;
+    setMessagePending(true);
+    const { conversationId, error } = await getOrCreateConversation(id);
+    setMessagePending(false);
+    if (error || !conversationId) {
+      toast.error('Could not open conversation');
+      return;
+    }
+    await refetchConversations();
+    navigate(`/messages/${conversationId}`);
+  };
 
   const handleSave = async (values: EditableProfileFields) => {
     const ok = await updateProfile(values);
@@ -109,9 +127,11 @@ export default function ProfilePage() {
         followPending={followPending}
         followerCount={liveFollowerCount}
         followingCount={followingCount}
+        messagePending={messagePending}
         uploadingField={uploadingField}
         onToggleFollow={toggleFollow}
         onEditProfile={() => setEditOpen(true)}
+        onMessage={handleMessage}
         onUploadImage={handleUploadImage}
         onFollowersClick={() => setFollowListType('followers')}
         onFollowingClick={() => setFollowListType('following')}

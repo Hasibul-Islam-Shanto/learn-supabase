@@ -4,16 +4,20 @@ interface ProfileActionsProps {
   isMe: boolean;
   following: boolean;
   pending?: boolean;
+  messagePending?: boolean;
   onToggleFollow: () => void;
   onEdit: () => void;
+  onMessage: () => void;
 }
 
 export default function ProfileActions({
   isMe,
   following,
   pending = false,
+  messagePending = false,
   onToggleFollow,
   onEdit,
+  onMessage,
 }: ProfileActionsProps) {
   if (isMe) {
     return (
@@ -33,7 +37,12 @@ export default function ProfileActions({
       >
         {following ? 'Following' : 'Follow'}
       </Button>
-      <Button variant="outline" size="sm">
+      <Button
+        variant="outline"
+        size="sm"
+        disabled={messagePending}
+        onClick={onMessage}
+      >
         Message
       </Button>
     </>
