@@ -5,11 +5,13 @@ import { MessageIcon, SearchIcon } from '@/shared/ui/icons';
 import { useAuth } from '@/features/auth/context/auth-context';
 import GlobalSearch from '@/features/search/components/GlobalSearch';
 import NotificationsMenu from '@/features/notifications/components/NotificationsMenu';
+import { useMessagesContext } from '@/features/messages/context/messages-context';
 import UserMenu from './UserMenu';
 
 export default function Navbar() {
   const navigate = useNavigate();
   const { session, profile } = useAuth();
+  const { unreadTotal: unreadMessages } = useMessagesContext();
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-white/90 backdrop-blur">
@@ -38,8 +40,17 @@ export default function Navbar() {
               >
                 <SearchIcon />
               </IconButton>
-              <IconButton label="Messages" className="bg-canvas">
+              <IconButton
+                label="Messages"
+                className="relative bg-canvas"
+                onClick={() => navigate('/messages')}
+              >
                 <MessageIcon />
+                {unreadMessages > 0 && (
+                  <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1 text-[11px] font-bold leading-none text-white">
+                    {unreadMessages > 9 ? '9+' : unreadMessages}
+                  </span>
+                )}
               </IconButton>
               <NotificationsMenu />
               <UserMenu profile={profile} user={session.user} />

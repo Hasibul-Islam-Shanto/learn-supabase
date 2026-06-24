@@ -15,9 +15,11 @@ interface ProfileHeaderProps {
   followPending: boolean;
   followerCount: number;
   followingCount: number;
+  messagePending?: boolean;
   uploadingField: ProfileImageField | null;
   onToggleFollow: () => void;
   onEditProfile: () => void;
+  onMessage: () => void;
   onUploadImage: (file: File, field: ProfileImageField) => void;
   onFollowersClick?: () => void;
   onFollowingClick?: () => void;
@@ -31,9 +33,11 @@ export default function ProfileHeader({
   followPending,
   followerCount,
   followingCount,
+  messagePending,
   uploadingField,
   onToggleFollow,
   onEditProfile,
+  onMessage,
   onUploadImage,
   onFollowersClick,
   onFollowingClick,
@@ -72,8 +76,10 @@ export default function ProfileHeader({
               isMe={isMe}
               following={following}
               pending={followPending}
+              messagePending={messagePending}
               onToggleFollow={onToggleFollow}
               onEdit={onEditProfile}
+              onMessage={onMessage}
             />
           </div>
         </div>

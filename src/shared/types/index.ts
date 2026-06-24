@@ -65,6 +65,27 @@ export interface SearchUserResult {
   bio: string | null;
 }
 
+export interface Conversation {
+  id: string;
+  updated_at: string;
+  other_user: ProfileSummary;
+  last_message: {
+    content: string;
+    created_at: string;
+    sender_id: string;
+  } | null;
+  unread_count: number;
+}
+
+export interface Message {
+  id: string;
+  conversation_id: string;
+  sender_id: string;
+  content: string;
+  created_at: string;
+  sender: ProfileSummary | null;
+}
+
 export type NotificationType = 'like' | 'comment' | 'follow';
 
 export interface AppNotification {

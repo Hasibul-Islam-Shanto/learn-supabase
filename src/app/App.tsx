@@ -5,6 +5,7 @@ import HomePage from '@/features/posts/pages/HomePage';
 import PostPage from '@/features/posts/pages/PostPage';
 import SearchPage from '@/features/search/pages/SearchPage';
 import UsersPage from '@/features/users/pages/UsersPage';
+import MessagesPage from '@/features/messages/pages/MessagesPage';
 import ProfilePage from '@/features/profile/pages/ProfilePage';
 import SignInPage from '@/features/auth/pages/SignInPage';
 import SignUpPage from '@/features/auth/pages/SignUpPage';
@@ -36,6 +37,8 @@ function App() {
         <Route path="/post/:id" element={<PostPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/users" element={<UsersPage />} />
+        <Route path="/messages" element={<MessagesPage />} />
+        <Route path="/messages/:conversationId" element={<MessagesPage />} />
         <Route path="/profile/:id" element={<ProfilePage />} />
         <Route path="/profile" element={<ProfileRedirect />} />
         <Route path="*" element={<NotFoundPage />} />
