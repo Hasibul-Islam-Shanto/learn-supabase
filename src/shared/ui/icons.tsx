@@ -40,19 +40,6 @@ export const ProfileIcon = ({ size = 22, className = '' }: IconProps) => (
   </svg>
 );
 
-export const GroupsIcon = ({ size = 22, className = '' }: IconProps) => (
-  <svg {...base(size, className)}>
-    <circle cx="12" cy="12" r="9" />
-    <path d="M3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18" />
-  </svg>
-);
-
-export const SavedIcon = ({ size = 22, className = '' }: IconProps) => (
-  <svg {...base(size, className)}>
-    <path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1Z" />
-  </svg>
-);
-
 export const BellIcon = ({ size = 20, className = '' }: IconProps) => (
   <svg {...base(size, className)}>
     <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
@@ -112,21 +99,6 @@ export const ImageIcon = ({ size = 20, className = '' }: IconProps) => (
     <rect x="3" y="3" width="18" height="18" rx="2" />
     <circle cx="9" cy="9" r="2" />
     <path d="m21 15-5-5L5 21" />
-  </svg>
-);
-
-export const VideoIcon = ({ size = 20, className = '' }: IconProps) => (
-  <svg {...base(size, className)}>
-    <rect x="2" y="6" width="14" height="12" rx="2" />
-    <path d="m22 8-6 4 6 4V8Z" />
-  </svg>
-);
-
-export const SmileIcon = ({ size = 20, className = '' }: IconProps) => (
-  <svg {...base(size, className)}>
-    <circle cx="12" cy="12" r="9" />
-    <path d="M8 14s1.5 2 4 2 4-2 4-2" />
-    <path d="M9 9h.01M15 9h.01" />
   </svg>
 );
 

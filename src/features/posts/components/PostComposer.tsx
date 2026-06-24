@@ -3,7 +3,7 @@ import type { PostFromRPC } from '@/shared/types';
 import Avatar from '@/shared/ui/Avatar';
 import Button from '@/shared/ui/Button';
 import Modal from '@/shared/ui/Modal';
-import { ImageIcon, SmileIcon, VideoIcon } from '@/shared/ui/icons';
+import { ImageIcon } from '@/shared/ui/icons';
 import { useAuth } from '@/features/auth/context/auth-context';
 import { fallbackAvatar } from '@/features/profile/helpers';
 import { usePostComposer } from '../hooks/usePostComposer';
@@ -125,30 +125,14 @@ export default function PostComposer({
 
       <div className="mt-4 flex items-center justify-between rounded-xl border border-line px-4 py-2.5">
         <span className="text-sm font-medium text-brand">Add to your post</span>
-        <div className="flex items-center gap-1">
-          <button
-            type="button"
-            aria-label="Add photo"
-            onClick={() => imageInputRef.current?.click()}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-accent hover:bg-accent-50"
-          >
-            <ImageIcon />
-          </button>
-          <button
-            type="button"
-            aria-label="Add video"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-brand hover:bg-brand-50"
-          >
-            <VideoIcon />
-          </button>
-          <button
-            type="button"
-            aria-label="Add feeling"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-amber-500 hover:bg-amber-50"
-          >
-            <SmileIcon />
-          </button>
-        </div>
+        <button
+          type="button"
+          aria-label="Add photo"
+          onClick={() => imageInputRef.current?.click()}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full text-accent hover:bg-accent-50"
+        >
+          <ImageIcon />
+        </button>
       </div>
     </Modal>
   );

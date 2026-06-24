@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import type { Comment } from '@/shared/types';
 import Avatar from '@/shared/ui/Avatar';
-import { SendIcon, SmileIcon } from '@/shared/ui/icons';
+import { SendIcon } from '@/shared/ui/icons';
 import { useAuth } from '@/features/auth/context/auth-context';
 import { useComments } from '../hooks/useComments';
 import CommentItem from './CommentItem';
@@ -135,10 +135,6 @@ export default function CommentSection({
               <SendIcon size={16} />
             )}
           </button>
-          <SmileIcon
-            size={16}
-            className="absolute right-8 top-1/2 -translate-y-1/2 text-muted"
-          />
         </div>
       </div>
 
