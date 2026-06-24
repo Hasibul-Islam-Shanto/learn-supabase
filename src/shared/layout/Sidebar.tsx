@@ -2,10 +2,9 @@ import { NavLink } from 'react-router-dom';
 import type { ReactNode } from 'react';
 
 import {
-  GroupsIcon,
   HomeIcon,
+  MessageIcon,
   ProfileIcon,
-  SavedIcon,
   UsersIcon,
 } from '@/shared/ui/icons';
 import { useAuth } from '@/features/auth/context/auth-context';
@@ -19,22 +18,15 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { to: '/', label: 'Home', icon: <HomeIcon />, end: true },
-  { to: '/users', label: 'Find followers', icon: <UsersIcon /> },
-  {
-    to: `/profile`,
-    label: 'Profile',
-    icon: <ProfileIcon />,
-  },
-];
-
-const staticItems: { label: string; icon: ReactNode }[] = [
-  { label: 'Groups', icon: <GroupsIcon /> },
-  { label: 'Saved', icon: <SavedIcon /> },
+  { to: '/users', label: 'People', icon: <UsersIcon /> },
+  { to: '/messages', label: 'Messages', icon: <MessageIcon /> },
+  { to: '/profile', label: 'Profile', icon: <ProfileIcon /> },
 ];
 
 export default function Sidebar() {
   const { session } = useAuth();
   const currentUser = session?.user;
+
   return (
     <aside className="hidden lg:block">
       <div className="sticky top-20 space-y-4">
@@ -57,16 +49,6 @@ export default function Sidebar() {
               {item.icon}
               {item.label}
             </NavLink>
-          ))}
-          {staticItems.map((item) => (
-            <button
-              key={item.label}
-              type="button"
-              className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-brand transition-colors hover:bg-brand-50"
-            >
-              {item.icon}
-              {item.label}
-            </button>
           ))}
         </nav>
       </div>

@@ -1,5 +1,4 @@
 import Avatar from '@/shared/ui/Avatar';
-import { ImageIcon, SmileIcon, VideoIcon } from '@/shared/ui/icons';
 import { useAuth } from '@/features/auth/context/auth-context';
 import { fallbackAvatar } from '@/features/profile/helpers';
 
@@ -22,29 +21,6 @@ export default function CreatePostBox({ onOpen }: CreatePostBoxProps) {
           className="flex-1 rounded-full bg-canvas px-4 py-3 text-left text-sm text-muted transition-colors hover:bg-brand-50"
         >
           What's on your mind, {displayName.split(' ')[0]}?
-        </button>
-      </div>
-      <div className="mt-3 grid grid-cols-3 gap-1 border-t border-line pt-3">
-        <button
-          type="button"
-          onClick={onOpen}
-          className="flex items-center justify-center gap-2 rounded-lg py-2 text-sm font-semibold text-muted transition-colors hover:bg-brand-50"
-        >
-          <ImageIcon size={18} className="text-accent" /> Photo
-        </button>
-        <button
-          type="button"
-          onClick={onOpen}
-          className="flex items-center justify-center gap-2 rounded-lg py-2 text-sm font-semibold text-muted transition-colors hover:bg-brand-50"
-        >
-          <VideoIcon size={18} className="text-brand" /> Video
-        </button>
-        <button
-          type="button"
-          onClick={onOpen}
-          className="flex items-center justify-center gap-2 rounded-lg py-2 text-sm font-semibold text-muted transition-colors hover:bg-brand-50"
-        >
-          <SmileIcon size={18} className="text-amber-500" /> Feeling
         </button>
       </div>
     </div>
